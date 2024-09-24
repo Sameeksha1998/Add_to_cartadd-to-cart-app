@@ -1,19 +1,14 @@
 import React from 'react';
-import { Box, Button, Card, CardContent, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Grid, Typography, CardMedia } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const featureItems = [
-    { title: 'Feature 1', description: 'Description of Feature 1' },
-    { title: 'Feature 2', description: 'Description of Feature 2' },
-    { title: 'Feature 3', description: 'Description of Feature 3' },
+    { title: 'Healthy Servings', image: '/image1.jpg' },
+    { title: 'Nutritious Recipes', image: '/images.jpeg' },
+    { title: 'Fresh Foods', image: '/images2.png' },
   ];
-
-  const cardItems = [
-    { title: 'Card 1', description: 'This is the first card' },
-    { title: 'Card 2', description: 'This is the second card' },
-    { title: 'Card 3', description: 'This is the third card' },
-    { title: 'Card 4', description: 'This is the fourth card' },
-  ];
+  const navigate = useNavigate();
 
   return (
     <Box>
@@ -32,10 +27,9 @@ const Home = () => {
           </Typography>
           <Typography variant="h6" color="white" mt={2}>
             Explore our services and offerings tailored just for you!
-          </Typography>git add .
-
-          <Button variant="contained" color="primary" size="large" sx={{ mt: 4 }}>
-            Get Started
+          </Typography>
+          <Button variant="contained" size="large" sx={{ color:'#d13d00', mt: 4, backgroundColor: "#fff" }} onClick={() => navigate('/add-to-cart')}>
+            Add To Cart
           </Button>
         </Box>
       </Box>
@@ -49,12 +43,15 @@ const Home = () => {
           {featureItems.map((item, index) => (
             <Grid item xs={12} md={4} key={index}>
               <Card elevation={3}>
+                <CardMedia
+                  component="img"
+                  alt={item.title}
+                  height="200"
+                  image={item.image}
+                />
                 <CardContent>
                   <Typography variant="h5" fontWeight={600}>
                     {item.title}
-                  </Typography>
-                  <Typography variant="body2" mt={2}>
-                    {item.description}
                   </Typography>
                 </CardContent>
               </Card>
@@ -63,28 +60,6 @@ const Home = () => {
         </Grid>
       </Box>
 
-      {/* Cards Section */}
-      <Box py={8} textAlign="center">
-        <Typography variant="h4" fontWeight={600} mb={4}>
-          Explore Categories
-        </Typography>
-        <Grid container spacing={4} justifyContent="center">
-          {cardItems.map((item, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" fontWeight={600}>
-                    {item.title}
-                  </Typography>
-                  <Typography variant="body2" mt={2}>
-                    {item.description}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
     </Box>
   );
 };

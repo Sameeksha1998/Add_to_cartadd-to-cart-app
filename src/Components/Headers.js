@@ -3,7 +3,6 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Badge from '@mui/material/Badge';
-import { NavLink } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Box, Button, IconButton, Rating, Typography } from '@mui/material';
@@ -20,6 +19,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import { ADD, REMOVE } from '../Redux/actions/action'
 import { useNavigate } from 'react-router-dom';
+import { AppBar, Toolbar } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 
 function Headers() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -60,87 +61,104 @@ function Headers() {
 
     return (
         <>
-            <Navbar bg="dark" variant="dark">
-                <Container>
-                    <Navbar.Brand as={NavLink} to="/">Home</Navbar.Brand>
-                    <Nav className="me-auto">
-                        <Nav.Link as={NavLink} to="/add">Add To Cart</Nav.Link>
-                    </Nav>
-                    <Button
-                        id="basic-button"
-                        aria-controls={open ? 'basic-menu' : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? 'true' : undefined}
-                        onClick={handleClick}
-                    >
-                        <Badge badgeContent={items.length} color="primary">
-                            <ShoppingCartIcon />
-                        </Badge>
-                    </Button>
-                    <Menu
-                        id="basic-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                        }}
-                    >
+            <Navbar bg="#fff" variant="dark">
+                <AppBar width="100%" position="static" sx={{ px: 4, backgroundColor: '#fff', boxShadow: 'none', borderBottom: '1px solid #ddd' }}>
+                    <Toolbar sx={{ justifyContent: 'space-between' }}>
+                        <Box>
+                            <Typography
+                                variant="h6"
+                                component={NavLink}
+                                to="/"
+                                sx={{ color: '#d13d00', textDecoration: 'none', flexGrow: 1, fontWeight: '600' }}
+                            >
+                                Home
+                            </Typography>
+                            <Typography
+                                ariant="h6"
+                                component={NavLink}
+                                to="/add-to-cart"
+                                sx={{ ml: 4, color: '#d13d00', textDecoration: 'none', flexGrow: 1, fontWeight: '600' }}
+                            >
+                                Add To Cart
+                            </Typography>
+                        </Box>
+                        <Button
+                            id="basic-button"
+                            aria-controls={open ? 'basic-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={handleClick}
+                        >
+                            <Badge badgeContent={items.length} color="primary">
+                                <ShoppingCartIcon />
+                            </Badge>
+                        </Button>
+                    </Toolbar>
+                </AppBar>
 
-                        {items.length ?
-                            <Paper>
-                                <TableContainer component={Paper}>
-                                    <Table aria-label="simple table">
-                                        {/* Table Header */}
-                                        <TableHead>
-                                            <TableRow>
+                <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                    }}
+                >
+
+                    {items.length ?
+                        <Paper>
+                            <TableContainer component={Paper}>
+                                <Table aria-label="simple table">
+                                    {/* Table Header */}
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>
+                                                Photo
+                                            </TableCell>
+                                            <TableCell>Name</TableCell>
+                                            <TableCell>Price</TableCell>
+                                            <TableCell>Rating</TableCell>
+                                            <TableCell>
+                                                <IconButton onClick={handleClose} > <CloseIcon /></IconButton> </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+
+                                    {/* Table Body */}
+                                    <TableBody>
+                                        {items.map((row, index) => (
+                                            <TableRow key={`${row.id}-${index}`} >
                                                 <TableCell>
-                                                    Photo
+                                                    <img onClick={() => navigate(`cart/${row.id}`)} src={row.imgdata} alt={row.name} style={{ width: '50px', height: '50px' }} />
+
                                                 </TableCell>
-                                                <TableCell>Name</TableCell>
-                                                <TableCell>Price</TableCell>
-                                                <TableCell>Rating</TableCell>
+                                                <TableCell>{row.rname}</TableCell>
+                                                <TableCell>{row.price}₹</TableCell>
                                                 <TableCell>
-                                                    <IconButton onClick={handleClose} > <CloseIcon /></IconButton> </TableCell>
+                                                    <Rating name="read-only" value={Number(row.rating)} readOnly /></TableCell>
+                                                <TableCell>
+                                                    <IconButton onClick={() => handleRemove(row.id)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </TableCell>
+                                                <TableCell>{row.qnty}</TableCell>
                                             </TableRow>
-                                        </TableHead>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <Typography>Total: {total}</Typography>
+                            <Paper />
+                        </Paper> :
+                        <Box display="flex" flexDirection="row" alignItems='center' padding={2}>
+                            <Typography>Your carts is empty</Typography>
+                            <img src="./cart.gif" alt="" className='emptycart_img' style={{ width: "5rem", padding: 10 }} />
+                        </Box>
+                    }
 
-                                        {/* Table Body */}
-                                        <TableBody>
-                                            {items.map((row, index) => (
-                                                <TableRow key={`${row.id}-${index}`} >
-                                                    <TableCell>
-                                                        <img onClick={() => navigate(`cart/${row.id}`)} src={row.imgdata} alt={row.name} style={{ width: '50px', height: '50px' }} />
-                        
-                                                    </TableCell>
-                                                    <TableCell>{row.rname}</TableCell>
-                                                    <TableCell>{row.price}₹</TableCell>
-                                                    <TableCell>
-                                                        <Rating name="read-only" value={Number(row.rating)} readOnly /></TableCell>
-                                                    <TableCell>
-                                                        <IconButton onClick={() => handleRemove(row.id)}>
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                    </TableCell>
-                                                    <TableCell>{row.qnty}</TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                                <Typography>Total: {total}</Typography>
-                                <Paper />
-                            </Paper> :
-                            <Box display="flex" flexDirection="row" alignItems='center' padding={2}>
-                                <Typography>Your carts is empty</Typography>
-                                <img src="./cart.gif" alt="" className='emptycart_img' style={{ width: "5rem", padding: 10 }} />
-                            </Box>
-                        }
-
-                        {/* <MenuItem onClick={handleClose}>Your Cart is Empty</MenuItem> */}
-                        {/* <CloseIcon/> */}
-                    </Menu>
-                </Container>
+                    {/* <MenuItem onClick={handleClose}>Your Cart is Empty</MenuItem> */}
+                    {/* <CloseIcon/> */}
+                </Menu>
             </Navbar>
         </>
     );
